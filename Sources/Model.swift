@@ -53,7 +53,11 @@ struct Scale: Codable, Identifiable, Hashable {
     static let builtIn = [v, font]
 
     func label(_ i: Int) -> String { grades.indices.contains(i) ? grades[i] : "?" }
-    func color(_ i: Int) -> Color { Ply.grade(i, of: grades.count) }
+    func color(_ i: Int) -> Color {
+        // A gym circuit named by colour gets that colour.
+        if custom, grades.indices.contains(i), let t = Ply.tape.first(where: { $0.0.lowercased() == grades[i].lowercased().trimmingCharacters(in: .whitespaces) }) { return t.1 }
+        return Ply.grade(i, of: grades.count)
+    }
 }
 
 struct Climb: Codable, Identifiable, Hashable {

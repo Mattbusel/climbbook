@@ -50,8 +50,8 @@ struct PyramidView: View {
                 .transition(.opacity)
 
                 HStack(spacing: 16) {
-                    legend(Ply.flash, "Flash")
-                    legend(Ply.ink2, "Send or repeat")
+                    legend(true, "Flash")
+                    legend(false, "Send or repeat")
                     Spacer()
                     Text("\(rows.reduce(0) { $0 + $1.flash + $1.send }) tops").font(.text(12.5, .bold)).foregroundStyle(Ply.dim)
                 }
@@ -69,7 +69,7 @@ struct PyramidView: View {
             HStack(spacing: -4) {
                 ForEach(0..<shown, id: \.self) { i in
                     Hold(label: "", color: store.scale.color(g), size: 26, seed: g * 31 + i)
-                        .overlay(HoldShape(seed: g * 31 + i).stroke(i < flash ? Ply.flash : .clear, lineWidth: 3).frame(width: 26, height: 23.4))
+                        .overlay(HoldShape(seed: g * 31 + i).stroke(i < flash ? Ply.ink : .clear, lineWidth: 2.5).frame(width: 26, height: 23.4))
                 }
                 if total > shown { Text("+\(total - shown)").font(.tag(10)).foregroundStyle(Ply.ink2).padding(.leading, 8) }
             }
@@ -79,9 +79,9 @@ struct PyramidView: View {
         .frame(height: 28)
     }
 
-    func legend(_ c: Color, _ t: String) -> some View {
+    func legend(_ ring: Bool, _ t: String) -> some View {
         HStack(spacing: 6) {
-            HoldShape(seed: 3).stroke(c, lineWidth: 2.5).frame(width: 16, height: 14)
+            HoldShape(seed: 3).fill(Ply.dim.opacity(0.5)).overlay(HoldShape(seed: 3).stroke(ring ? Ply.ink : .clear, lineWidth: 2)).frame(width: 16, height: 14)
             Text(t).font(.text(12, .semibold)).foregroundStyle(Ply.ink2)
         }
     }
